@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns: th="http://www.thymeleaf.org/thymeleaf">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <title>Lista de Plazas</title>
+</head>
+
+<body style="font-weight: bold;">
+    <!-- NavBar -->
+    <head class="container">
+        <nav class="d-flex flex-wrap justify-content-center py-3 mb-4 border-button" style="background-color: #a7f9ff;">
+            <a th:href="@{/ingreso}"
+                class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+                <img src="https://misiontic2022.mintic.gov.co/mt2022/assets/assets/images/logo-mision.png" height="32">
+                <span class="navbar-brand mb-0 h1 fw-bold fs-4">EasyParking</span>
+            </a>
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a style="color: black; font-weight: bold; font-size:	10" th:href="@{/ingreso}"
+                        class="nav-link">Inicio</a></li>
+                <li class="nav-item"><a style="color: black; font-weight: bold; font-size:	10" th:href="@{/facturas}"
+                        class="nav-link">Facturas</a></li>
+                <li class="nav-item"><a style="color: black; font-weight: bold; font-size:	10" th:href="@{/usuarios}"
+                        class="nav-link">Usuarios</a></li>
+                <li class="nav-item"><a style="color: black; font-weight: bold; font-size:	10" th:href="@{/personas}"
+                        class="nav-link">Personas</a></li>
+                <li class="nav-item"><a style="font-size:10;  font-weight: bold;" class="nav-link  active">Plazas</a>
+                </li>
+                <li class="nav-item text-dark"><a style="color: black; font-weight: bold; font-size:	10"
+                        th:href="@{/configuraciones}" class="nav-link">Configuraciones</a></li>
+            </ul>
+        </nav>
+    </head>
+    <section class="container">
+        <span class="fw-bold w-auto">Administración de plazas</span>
+        <!-- Form Guardar PLaza -->
+        <div class="row">
+            <form class="row g-3" th:action="@{/plazas/guardar}" method="post" th:object="${plaza}">
+                <br />
+                <div class="col-md-4">
+                    <input class="form-control" type="hidden" name="idPlazas" th:field="*{idPlazas}">
+
+                    <label class="form-label" for="codigoPlaza">Codigo de Plaza:</label>
+                    <input style="background-color: rgb(230, 230, 230); font-style: italic;" class="form-control"
+                        type="text" name="codigoPlaza" th:field="*{codigoPlaza}" />
+                </div>
+                <div class="col-md-4">
+                    <div class="col-md-4">
+                        <label for="tipoPlaza">Tipo Plaza:</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="tipoPlaza" value="carro"
+                            th:field="*{tipoPlaza}">
+                        <label class="form-check-label">Carro</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="tipoPlaza" value="moto"
+                            th:field="*{tipoPlaza}">
+                        <label class="form-check-label">Moto</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="col-md-4">
+                        <label for="tipoPlaza">Estado:</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="estado" value="libre" th:field="*{estado}">
+                        <label class="form-check-label">Libre</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="estado" value="ocupada" th:field="*{estado}">
+                        <label class="form-check-label">Ocupada</label>
+                    </div>
+                </div>
+                <div>
+                    <input class="btn text-dark" style="background-color: #a7f9ff; font-weight: bold;" type="submit"
+                        name="btnguardar" value="Guardar" />
+                </div>
+            </form>
+        </div>
+        <!-- Despliegue de tabla Plazas -->
+        <div th:if="${plazas != null and !plazas.empty}">
+            <br />
+            <span class="fw-bold w-auto">Lista de plazas</span>
+            <table class="table table-striped table-bordered mt-4">
+
+                <tr style="background-color: #a7f9ff;">
+                    <th style="text-align: center;" scope="col">Codigo Plaza</th>
+                    <th style="text-align: center;" scope="col">Tipo Plaza</th>
+                    <th style="text-align: center;" scope="col">Estado</th>
+                    <th style="text-align: center;" scope="col">Acciones</th>
+                </tr>
+                <tr th:each="plaza: ${plazas}">
+                    <th style="text-align: center;" th:text="${plaza.codigoPlaza}"></th>
+                    <th style="text-align: center;" th:text="${plaza.tipoPlaza}"></th>
+                    <th style="text-align: center;" th:text="${plaza.estado}"></th>
+                    <td style="text-align: center;">
+                        <a th:href="@{/plazas/editar/} + ${plaza.idPlazas}" type="submit" class="btn text-dark"
+                            style="background-color: #a7f9ff; font-weight: bold;">Editar</a>
+                        <a th:href="@{/plazas/eliminar/} + ${plaza.idPlazas}" type="submit" style="font-weight: bold;"
+                            class="btn btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div th:if="${plazas == null or plazas.empty}">
+            <h2>Lista de plazas vacia</h2>
+        </div>
+    </section>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
